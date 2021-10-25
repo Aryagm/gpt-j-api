@@ -49,7 +49,7 @@ tokenizer = transformers.GPT2TokenizerFast.from_pretrained("gpt2")
 total_batch = per_replica_batch * jax.device_count() // cores_per_replica
 
 network = CausalTransformer(params)
-network.state = read_ckpt(network.state, "./step_383500/", devices.shape[1])
+network.state = read_ckpt(network.state, "./step_57317/", devices.shape[1])
 del network.state["opt_state"]
 network.state = network.move_xmap(network.state, np.zeros(cores_per_replica))
 
@@ -67,8 +67,8 @@ async def generate(
     start = time.time()
     tokens = tokenizer.encode(context)
     provided_ctx = len(tokens)
-    if token_max_length + provided_ctx > 2048:
-        return {"text": "Don't abuse the API, please."}
+    #if token_max_length + provided_ctx > 2048:
+    #    return {"text": "Don't abuse the API, please."}
     pad_amount = seq - provided_ctx
 
     padded_tokens = np.pad(tokens, ((pad_amount, 0),)).astype(np.uint32)
